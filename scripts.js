@@ -1,42 +1,79 @@
-var containers = [];
 var body = document.querySelector('body');
-var numberOfRows = 16;
-var boxHeight = 500 / numberOfRows;
-
 // CREATING THE LAYOUT \\
-var button = document.createElement('button')
-button.textContent = "Change number of squares per side"
-var whole = document.createElement('div');
-whole.classList.add('whole');
+var button = document.createElement('button');
+button.textContent = "Change";
 
-for (var i = 0; i<numberOfRows; i++) {
-    const container = document.createElement('div');
-    container.classList.add('container');
-    containers.push(container);
-}
-for(var t = 0; t <numberOfRows; t++) {
-    for(var i = 0; i < numberOfRows; i++){
-        let newDiv = document.createElement('div');
-        newDiv.classList.add('box');
-        newDiv.style.width = boxHeight + 'px';
-        newDiv.style.height = boxHeight + 'px';
-        containers[i].appendChild(newDiv);
+function generateLayout(numberOfRows) {
+    var boxHeight = 500 / numberOfRows;
+    var whole = document.createElement('div');
+    whole.classList.add('whole');
+    let containers = [];
+    
+    for (let i = 0; i<numberOfRows; i++) {
+        let container = document.createElement('div');
+        container.classList.add('container');
+        containers.push(container);
     }
-}
-
-for(const container of containers) {
-    whole.appendChild(container);
+    for(let t = 0; t <numberOfRows; t++) {
+        for(let i = 0; i < numberOfRows; i++){
+            let newDiv = document.createElement('div');
+            newDiv.classList.add('box');
+            newDiv.style.width = boxHeight + 'px';
+            newDiv.style.height = boxHeight + 'px';
+            containers[i].appendChild(newDiv);
+        }
+    }
+    
+    for(let container of containers) {
+        whole.appendChild(container);
+    }
+    body.appendChild(whole);
 }
 body.appendChild(button)
-body.appendChild(whole);
+generateLayout(16)
 // CREATING THE LAYOUT \\
 
 // CREATING THE LOGIC \\
 var colorBox = document.querySelectorAll(".box")
 
+function generateRandomColor(){
+    let maxVal = 0xFFFFFF; // 16777215
+    let randomNumber = Math.random() * maxVal; // 0-1 * 16777215
+    randomNumber = Math.floor(randomNumber); // 2819349,1383 => 2819349
+    randomNumber = randomNumber.toString(16); // 2819349 => 2B0515
+    let randColor = randomNumber.padStart(6, 0); // 2B0515 => 2B0515(6 znaków | 0 - dopełnienie)
+    return `#${randColor.toUpperCase()}` // 2B0515 => #2B0515
+}
 
 for(const element of colorBox) {
     element.addEventListener('mouseover', function() {
-        element.style.backgroundColor = "white"
+        element.style.backgroundColor = generateRandomColor()
     })
+}
+// CREATING THE LOGIC \\
+
+// CREATING THE LOGIC FOR BUTTON \\
+function changeLayout(){
+    document.querySelector('.whole').remove()
+    let numberOfColumns = slider.value;
+    generateLayout(numberOfColumns)
+    var colorBox = document.querySelectorAll(".box")
+    for(const element of colorBox) {
+        element.addEventListener('mouseover', function() {
+            element.style.backgroundColor = generateRandomColor();
+    })
+
+}
+}
+
+button.addEventListener('click', changeLayout)
+
+var slider = document.getElementById("myRange");
+var output = document.getElementById("demo");
+output.innerHTML = slider.value; // Display the default slider value
+output.style.color = "blue"
+
+// Update the current slider value (each time you drag the slider handle)
+slider.oninput = function() {
+  output.innerHTML = this.value;
 }
