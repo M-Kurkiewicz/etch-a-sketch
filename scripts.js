@@ -1,7 +1,7 @@
 var body = document.querySelector('body');
 // CREATING THE LAYOUT \\
 var button = document.createElement('button');
-button.textContent = "Change number of squares per side";
+button.textContent = "Change";
 
 function generateLayout(numberOfRows) {
     var boxHeight = 500 / numberOfRows;
@@ -55,15 +55,25 @@ for(const element of colorBox) {
 // CREATING THE LOGIC FOR BUTTON \\
 function changeLayout(){
     document.querySelector('.whole').remove()
-    let numberOfColumns = prompt("How many rows and columns?: ")
+    let numberOfColumns = slider.value;
     generateLayout(numberOfColumns)
     var colorBox = document.querySelectorAll(".box")
     for(const element of colorBox) {
         element.addEventListener('mouseover', function() {
-            element.style.backgroundColor = generateRandomColor()
-        })
+            element.style.backgroundColor = generateRandomColor();
+    })
 
 }
 }
 
 button.addEventListener('click', changeLayout)
+
+var slider = document.getElementById("myRange");
+var output = document.getElementById("demo");
+output.innerHTML = slider.value; // Display the default slider value
+output.style.color = "blue"
+
+// Update the current slider value (each time you drag the slider handle)
+slider.oninput = function() {
+  output.innerHTML = this.value;
+}

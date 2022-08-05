@@ -3,12 +3,14 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: bisque;
 }
 .whole {
     width: 500px;
     height: 500px;
     margin: 0;
     justify-self: center;
+
 }
 
 .container {
@@ -20,3 +22,14 @@ body {
     background-color: black;
 }
 
+button {
+    margin: 10px 0 20px;
+    padding: 8px;
+    background: blue;
+    color: white;
+    border: none;
+}
+
+.slider {
+    width: 350px;
+}
