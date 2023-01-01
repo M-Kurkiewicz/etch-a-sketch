@@ -1,79 +1,72 @@
-var body = document.querySelector('body');
-// CREATING THE LAYOUT \\
-var button = document.createElement('button');
-button.textContent = "Change";
+var body = document.querySelector("body");
+var slider = document.createElement('input');
+var sliderValue = document.createElement('div');
+var changeButton = document.createElement("button");
+
+slider.type = 'range';
+slider.min = '2';
+slider.max = '50';
+slider.value = '10';
+slider.classList.add('slider');
+slider.id = 'range';
+body.appendChild(slider);
+sliderValue.id = 'sliderValue';
+body.appendChild(sliderValue);
+changeButton.textContent = "CHANGE";
+changeButton.classList.add('button');
+changeButton.id = 'button';
+body.appendChild(changeButton)
 
 function generateLayout(numberOfRows) {
-    var boxHeight = 500 / numberOfRows;
-    var whole = document.createElement('div');
-    whole.classList.add('whole');
-    let containers = [];
-    
-    for (let i = 0; i<numberOfRows; i++) {
-        let container = document.createElement('div');
-        container.classList.add('container');
-        containers.push(container);
-    }
-    for(let t = 0; t <numberOfRows; t++) {
-        for(let i = 0; i < numberOfRows; i++){
-            let newDiv = document.createElement('div');
-            newDiv.classList.add('box');
-            newDiv.style.width = boxHeight + 'px';
-            newDiv.style.height = boxHeight + 'px';
-            containers[i].appendChild(newDiv);
+    var panel = document.createElement('div');
+    panel.classList.add('panel');
+    // Creating rows with boxes
+    for(let r = 0; r<numberOfRows; r++) {
+        var row = document.createElement('div');
+        row.classList.add('row');
+        row.style.height = 500 / numberOfRows + 'px';
+        row.style.width = '500px';
+        row.style.display = 'flex';
+        for (let i = 0;i<numberOfRows;i++){
+            var box = document.createElement('div');
+            box.classList.add('box');
+            box.style.height = row.style.height;
+            box.style.width = 500 / numberOfRows + 'px';
+            box.style.background = 'black';
+            row.appendChild(box);
         }
+        panel.appendChild(row);
     }
-    
-    for(let container of containers) {
-        whole.appendChild(container);
-    }
-    body.appendChild(whole);
+    body.appendChild(panel);
+    changeColors();
 }
-body.appendChild(button)
-generateLayout(16)
-// CREATING THE LAYOUT \\
+generateLayout(10);
 
-// CREATING THE LOGIC \\
-var colorBox = document.querySelectorAll(".box")
-
-function generateRandomColor(){
-    let maxVal = 0xFFFFFF; // 16777215
-    let randomNumber = Math.random() * maxVal; // 0-1 * 16777215
-    randomNumber = Math.floor(randomNumber); // 2819349,1383 => 2819349
-    randomNumber = randomNumber.toString(16); // 2819349 => 2B0515
-    let randColor = randomNumber.padStart(6, 0); // 2B0515 => 2B0515(6 znaków | 0 - dopełnienie)
-    return `#${randColor.toUpperCase()}` // 2B0515 => #2B0515
+function randomColor(){
+    return '#' + Math.floor(Math.random()*16777215).toString(16);
 }
-
-for(const element of colorBox) {
-    element.addEventListener('mouseover', function() {
-        element.style.backgroundColor = generateRandomColor()
+function changeColors(){
+    const boxes = document.querySelectorAll('.box');
+    for(const box of boxes){
+    box.addEventListener('mouseover', function(){
+        box.style.backgroundColor = randomColor();
+        box.style.opacity = 1;
     })
 }
-// CREATING THE LOGIC \\
+}
 
-// CREATING THE LOGIC FOR BUTTON \\
 function changeLayout(){
-    document.querySelector('.whole').remove()
-    let numberOfColumns = slider.value;
-    generateLayout(numberOfColumns)
-    var colorBox = document.querySelectorAll(".box")
-    for(const element of colorBox) {
-        element.addEventListener('mouseover', function() {
-            element.style.backgroundColor = generateRandomColor();
-    })
-
-}
+    document.querySelector('.panel').remove();
+    generateLayout(slider.value);
+    changeColors();
 }
 
-button.addEventListener('click', changeLayout)
 
-var slider = document.getElementById("myRange");
-var output = document.getElementById("demo");
-output.innerHTML = slider.value; // Display the default slider value
-output.style.color = "blue"
+sliderValue.innerHTML = slider.value; // Display the default slider value
 
 // Update the current slider value (each time you drag the slider handle)
 slider.oninput = function() {
-  output.innerHTML = this.value;
+  sliderValue.innerHTML = this.value;
 }
+
+changeButton.addEventListener('click', changeLayout);
